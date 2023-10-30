@@ -2,20 +2,27 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
-  TouchableOpacity,
   Modal,
 } from "react-native";
 import React, { useState } from "react";
+import InputBox from "./src/components/InputBox";
+import Button from "./src/components/Button";
 
 const App = () => {
   const [name, setName] = useState(""); // "" is the default value
   const [mobileNumber, setMobileNumber] = useState("");
   const [userName, setUserName] = React.useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   const [showRegistrationSuccess, setShowRegistrationSuccess] =
     React.useState(false); // false is the default value
+
+  const validateEmail = (email) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
 
   const registration = () => {
     if (name == "") {
@@ -30,6 +37,11 @@ const App = () => {
 
     if (userName == "" || userName.length < 5) {
       alert("Please enter valid username (min 5 characters)");
+      return; // stop the function
+    }
+
+    if (!validateEmail(email)) {
+      alert("Please enter valid email");
       return; // stop the function
     }
 
@@ -51,108 +63,64 @@ const App = () => {
       }}
     >
       <Text>Facebook</Text>
-      <TextInput
-        onChangeText={(text) => {
+
+      <InputBox
+        placeHolder={"Enter your name"}
+        value={name}
+        onChange={(text) => {
           setName(text);
         }}
-        cursorColor="red"
-        value={name}
-        style={{
-          backgroundColor: "#fff",
-          height: 40,
-          width: "80%",
-          marginTop: 10,
-          borderRadius: 5,
-          borderWidth: 1,
-          borderColor: "#3975EA",
-        }}
-        placeholder="Enter your name"
       />
-      <TextInput
-        onChangeText={(text) => {
+      <InputBox
+        placeHolder={"Enter your phone number"}
+        value={mobileNumber}
+        onChange={(text) => {
           setMobileNumber(text);
         }}
-        value={mobileNumber}
-        style={{
-          backgroundColor: "#fff",
-          height: 40,
-          width: "80%",
-          marginTop: 10,
-          borderRadius: 5,
-          borderWidth: 1,
-          borderColor: "#3975EA",
-        }}
-        placeholder="Enter your phone number"
-        keyboardType="phone-pad"
-        maxLength={10}
+        keyboard="phone-pad"
+        textLength={10}
       />
-      <TextInput
-        onChangeText={(text) => {
+      <InputBox
+        placeHolder={"Enter your username"}
+        value={userName}
+        onChange={(text) => {
           setUserName(text);
         }}
-        value={userName}
-        style={{
-          backgroundColor: "#fff",
-          height: 40,
-          width: "80%",
-          marginTop: 10,
-          borderRadius: 5,
-          borderWidth: 1,
-          borderColor: "#3975EA",
-        }}
-        placeholder="Enter your username"
       />
 
-      <TextInput
-        style={{
-          backgroundColor: "#fff",
-          height: 40,
-          width: "80%",
-          marginTop: 10,
-          borderRadius: 5,
-          borderWidth: 1,
-          borderColor: "#3975EA",
+      <InputBox
+        placeHolder={"Enter your email"}
+        value={email}
+        onChange={(text) => {
+          setEmail(text);
         }}
-        placeholder="Enter your password"
-        onChangeText={(text) => {
+        keyboard={"email-address"}
+      />
+
+      <InputBox
+        placeHolder={"Enter your password"}
+        value={password}
+        onChange={(text) => {
           setPassword(text);
         }}
-        value={password}
         secureTextEntry={true}
       />
 
-      <TouchableOpacity
-        onPress={() => {
+      <Button
+        buttonName="Registration"
+        buttonOnPress={() => {
           registration();
         }}
-        style={{
-          backgroundColor: "#3975EA",
-          height: 40,
-          width: 140,
-          marginTop: 10,
-          justifyContent: "center",
-          alignItems: "center",
-          borderRadius: 10,
-        }}
-      >
-        <Text
-          style={{
-            color: "#fff",
-            fontSize: 16,
-            fontWeight: "bold",
-          }}
-        >
-          Registration
-        </Text>
-      </TouchableOpacity>
+      />
 
       <Modal
         visible={showRegistrationSuccess}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => {
-          setShowRegistrationSuccess(false);
-        } // when user press back button
+        onRequestClose={
+          () => {
+            setShowRegistrationSuccess(false);
+          } // when user press back button
         }
       >
         <View
@@ -163,8 +131,8 @@ const App = () => {
               height: 200,
               width: "70%",
               backgroundColor: "#fff",
-              justifyContent:'center',
-              alignItems:'center'
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <Text style={{ fontSize: 18, fontWeight: "bold" }}>
@@ -178,28 +146,11 @@ const App = () => {
               password: {password}
             </Text>
 
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#3975EA",
-                height: 40,
-                width: 140,
-                marginTop: 10,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 10,
-              }}
-              onPress={() => setShowRegistrationSuccess(false)}
-            >
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                }}
-              >
-                Close
-              </Text>
-            </TouchableOpacity>
+            <Button
+              buttonName="Close"
+              buttonOnPress={() => setShowRegistrationSuccess(false)}
+            />
+
           </View>
         </View>
       </Modal>
