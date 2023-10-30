@@ -1,9 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Modal,
-} from "react-native";
+import { StyleSheet, Text, View, Modal, Platform ,Alert  } from "react-native";
 import React, { useState } from "react";
 import InputBox from "./src/components/InputBox";
 import Button from "./src/components/Button";
@@ -14,6 +9,8 @@ const App = () => {
   const [userName, setUserName] = React.useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+
+  const [loading, setLoading] = React.useState(false);
 
   const [showRegistrationSuccess, setShowRegistrationSuccess] =
     React.useState(false); // false is the default value
@@ -50,8 +47,29 @@ const App = () => {
       return; // stop the function
     }
 
-    setShowRegistrationSuccess(true);
+    setLoading(true);
+
+    setTimeout(() => {
+      setShowRegistrationSuccess(true);
+      setLoading(false);
+    }, 3000);
   };
+
+  const closeModal = () => {
+    setShowRegistrationSuccess(false);
+    Alert.alert('Exist', 'You can exist login', [
+      {
+        text: 'Ask me later',
+        onPress: () => console.log('Ask me later pressed'),
+      },
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ]);
+  }
 
   return (
     <View
@@ -111,6 +129,7 @@ const App = () => {
         buttonOnPress={() => {
           registration();
         }}
+        loading={loading}
       />
 
       <Modal
@@ -146,11 +165,14 @@ const App = () => {
               password: {password}
             </Text>
 
+            <Text>
+              {Platform.OS} : {Platform.Version} {"\n"}
+            </Text>
+
             <Button
               buttonName="Close"
-              buttonOnPress={() => setShowRegistrationSuccess(false)}
+              buttonOnPress={() => closeModal()}
             />
-
           </View>
         </View>
       </Modal>

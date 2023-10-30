@@ -1,20 +1,26 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity , Platform , ActivityIndicator } from "react-native";
 import React from "react";
 
-const Button = ({ buttonName, buttonOnPress }) => {
+const Button = ({ buttonName, buttonOnPress , loading }) => {
   return (
     <TouchableOpacity
+      disabled={loading}
       onPress={buttonOnPress}
       style={{
-        backgroundColor: "#3975EA",
+        backgroundColor: Platform.OS === 'android' ?  "#3975EA": "red",
         height: 40,
         width: 140,
-        marginTop: 10,
+        marginTop: Platform.OS === 'android' ?  10 : 25,
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 10,
       }}
     >
+
+    {
+      loading ? 
+      <ActivityIndicator size="small" color="#fff" />
+      :
       <Text
         style={{
           color: "#fff",
@@ -24,6 +30,8 @@ const Button = ({ buttonName, buttonOnPress }) => {
       >
         {buttonName}
       </Text>
+    }
+
     </TouchableOpacity>
   );
 };
